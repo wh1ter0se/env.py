@@ -1,5 +1,11 @@
 import subprocess
-from _common import format_prefix, run_cmd, user_is_running_windows, get_uv_version
+from _common import (
+    must_pass,
+    format_prefix,
+    run_cmd,
+    user_is_running_windows,
+    get_uv_version,
+)
 
 
 def install_uv(prefix: str | None) -> bool:
@@ -11,33 +17,50 @@ def install_uv(prefix: str | None) -> bool:
         print("\t*nix detected, installing uv via curl...")
         try:
             run_cmd(
-                args=["curl", "-LsSf", "https://astral.sh/uv/install.sh", "|", "sh"],
-                check=True,
+                cmd="curl -LsSf https://astral.sh/uv/install.sh | sh",
+                shell=True,
+                check=False,
             )
             run_cmd(
-                args=["uv", "--version"],
+                cmd=["uv", "--version"],
                 check=True,
             )
             print("\tSuccessfully installed uv via curl")
             return True
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             print("\tFailed to install uv via curl")
 
-    # Install via pip on Windows or if curl fails
+    # Install via Python's pip
     print("\tInstalling uv via pip...")
     try:
         run_cmd(
-            args=["pip", "install", "uv"],
+            cmd=["python", "-m", "pip", "install", "uv"],
             check=True,
         )
         run_cmd(
-            args=["uv", "--version"],
+            cmd=["uv", "--version"],
             check=True,
         )
         print("\tSuccessfully installed uv via pip")
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         print("\tFailed to install uv via pip.")
+
+    # Install via Python3's pip
+    print("\tInstalling uv via pip3...")
+    try:
+        run_cmd(
+            cmd=["python3", "-m", "pip", "install", "uv"],
+            check=True,
+        )
+        run_cmd(
+            cmd=["uv", "--version"],
+            check=True,
+        )
+        print("\tSuccessfully installed uv via pip3")
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("\tFailed to install uv via pip3.")
 
     return False
 
@@ -46,45 +69,52 @@ def update_uv(prefix: str | None) -> bool:
     """Update uv to the latest version."""
     print(format_prefix(prefix) + "Updating uv...")
 
-    # Early exit if uv is not installed
-    if get_uv_version() is None:
-        return False
-
     # Update through uv
     print("\tUpdating uv directly...")
     try:
         run_cmd(
-            args=["uv", "self-update"],
+            cmd=["uv", "self", "update"],
             check=True,
         )
         print("\tSuccessfully updated uv directly")
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         print("\tFailed to update uv directly")
 
-    # Update through pip
+    # Update through Python's pip
     print("\tUpdating uv via pip...")
     try:
         run_cmd(
-            args=["pip", "install", "--upgrade", "uv"],
+            cmd=["python", "-m", "pip", "install", "--upgrade", "uv"],
             check=True,
         )
         print("\tSuccessfully updated uv via pip")
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         print("\tFailed to update uv via pip")
+
+    # Update through Python3's pip
+    print("\tUpdating uv via pip3...")
+    try:
+        run_cmd(
+            cmd=["python3", "-m", "pip", "install", "--upgrade", "uv"],
+            check=True,
+        )
+        print("\tSuccessfully updated uv via pip3")
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("\tFailed to update uv via pip3")
 
     return False
 
 
 if __name__ == "__main__":
     # Install uv
-    uv_installed = get_uv_version(prefix="1/4")
-    if not uv_installed:
-        install_uv(prefix="2/4")
+    if get_uv_version(prefix="1/4") is None:
+        must_pass(install_uv(prefix="2/4"))
 
     # Update uv
-    update_uv(prefix="3/4")
+    must_pass(update_uv(prefix="3/4"))
 
     # Verify installation
-    get_uv_version(prefix="4/4")
+    must_pass(get_uv_version(prefix="4/4"))

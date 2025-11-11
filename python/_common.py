@@ -5,38 +5,30 @@ import datetime as dt
 
 
 class UvVersionInfo:
-    version: str | None
-    hash: str | None
-    build_date: str | None
+    major: int | None
+    minor: int | None
+    micro: int | None
 
     _stdout: bytes
 
     def __init__(self, stdout: bytes) -> None:
         # Store stdout
         self._stdout = stdout
-
-        # Parse the output
         output = self._stdout.decode("utf-8").strip()
-        pattern = r"^uv\s+(\S+)\s+\((\S+)\s+(\d{4}-\d{2}-\d{2})\)$"
-        match = re.match(pattern=pattern, string=output)
-        if match is None:
-            self.version = None
-            self.hash = None
-            self.build_date = None
-            return
 
-        # Store the fields if the regex got parsed
-        self.version, self.hash, self.build_date = match.groups()
+        # Match `uv X.Y.Z` optionally followed by `(hash YYYY-MM-DD)`
+        pattern = r"^uv\s+(\d+)\.(\d+)\.(\d+)(?:\s+\(\S+\s+\d{4}-\d{2}-\d{2}\))?$"
+        match = re.match(pattern, output)
+
+        if match:
+            self.major, self.minor, self.micro = map(int, match.groups())
+        else:
+            self.major = self.minor = self.micro = None
 
     def __str__(self) -> str:
-        if self.version is None or self.hash is None or self.build_date is None:
+        if None in (self.major, self.minor, self.micro):
             return "\tUnable to extract uv version information"
-
-        return (
-            f"\tVersion: {self.version}\n"
-            f"\tBuild Hash: {self.hash}\n"
-            f"\tBuild Date: {self.build_date}"
-        )
+        return f"\tVersion: {self.major}.{self.minor}.{self.micro}"
 
 
 def must_pass(value: bool) -> None:
@@ -54,7 +46,7 @@ def format_prefix(prefix: str | None) -> str:
 
 
 def run_cmd(
-    args: list[str],
+    cmd: str|list[str],
     check: bool = False,
     stdout: int = subprocess.PIPE,
     stderr: int = subprocess.PIPE,
@@ -62,12 +54,13 @@ def run_cmd(
 ) -> subprocess.CompletedProcess:
     """Run a command and return the completed process."""
     return subprocess.run(
-        args=args,
+        cmd,
         check=check,
         stdout=stdout,
         stderr=stderr,
         shell=shell,
     )
+    
 
 
 def user_is_running_windows() -> bool:
@@ -81,13 +74,13 @@ def get_uv_version(prefix: str | None = None) -> UvVersionInfo | None:
     try:
         # Check the version
         version_check_subproc = run_cmd(
-            args=["uv", "--version"],
+            cmd=["uv", "--version"],
             check=True,
         )
         print("\tFound uv version")
         version = UvVersionInfo(stdout=version_check_subproc.stdout)
         print(str(version))
         return version
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         print("\tNo installations of uv found")
         return None
