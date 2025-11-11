@@ -1,165 +1,90 @@
-import os
-import re
 import subprocess
-import datetime as dt
-
-NUM_STEPS = 3
+from _common import format_prefix, run_cmd, user_is_running_windows, get_uv_version
 
 
-class UvVersionInfo:
-    version: str | None
-    hash: str | None
-    build_date: str | None
-
-    _stdout: bytes
-
-    def __init__(self, stdout: bytes) -> None:
-        # Store stdout
-        self._stdout = stdout
-
-        # Parse the output
-        output = self._stdout.decode("utf-8").strip()
-        pattern = r"^uv\s+(\S+)\s+\((\S+)\s+(\d{4}-\d{2}-\d{2})\)$"
-        match = re.match(pattern=pattern, string=output)
-        if match is None:
-            self.version = None
-            self.hash = None
-            self.build_date = None
-            return
-
-        # Store the fields if the regex got parsed
-        self.version, self.hash, self.build_date = match.groups()
-
-    def __str__(self) -> str:
-        if self.version is None or self.hash is None or self.build_date is None:
-            return "\tUnable to extract uv version information"
-
-        return (
-            f"\tVersion: {self.version}\n"
-            f"\tBuild Hash: {self.hash}\n"
-            f"\tBuild Date: {self.build_date}"
-        )
-
-
-def user_is_running_windows():
-    """Check if the user is running Windows."""
-    return os.name == "nt"
-
-
-def uv_is_installed() -> bool:
-    """Check if uv is installed."""
-    try:
-        # Check the version
-        version_check_subproc = subprocess.run(
-            args=["uv", "--version"],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            shell=False,
-        )
-        print(f"[1/{NUM_STEPS}] Discovered uv installation")
-
-        # Parse the output
-        output = version_check_subproc.stdout.decode("utf-8").strip()
-        pattern = r"^uv\s+(\S+)\s+\((\S+)\s+(\d{4}-\d{2}-\d{2})\)$"
-        match = re.match(pattern=pattern, string=output)
-
-        # Print the version info
-        if not match:
-            print("\tUnable to extract uv version information")
-        else:
-            version, hash_str, date_str = match.groups()
-            print(f"\tVersion: {version}")
-            print(f"\tBuild Hash: {hash_str}")
-            print(f"\tBuild Date: {date_str}")
-
-        return True
-    except subprocess.CalledProcessError:
-        print(f"[1/{NUM_STEPS}] No installations of uv discovered")
-        return False
-
-
-def install_uv() -> None:
+def install_uv(prefix: str | None) -> bool:
     """Install uv, if not already installed."""
+    print(format_prefix(prefix) + "Installing uv...")
 
     # Install via curl if we can
     if not user_is_running_windows():
-        print(f"[2/{NUM_STEPS}] *nix detected, installing uv via curl...")
+        print("\t*nix detected, installing uv via curl...")
         try:
-            subprocess.run(
-                args=[
-                    "curl",
-                    "-LsSf",
-                    "https://astral.sh/uv/install.sh",
-                    "|",
-                    "sh",
-                ],
+            run_cmd(
+                args=["curl", "-LsSf", "https://astral.sh/uv/install.sh", "|", "sh"],
                 check=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                shell=False,
             )
-            subprocess.run(
+            run_cmd(
                 args=["uv", "--version"],
                 check=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                shell=False,
             )
             print("\tSuccessfully installed uv via curl")
+            return True
         except subprocess.CalledProcessError:
             print("\tFailed to install uv via curl")
 
-    # Windows install
-    print(f"[2/{NUM_STEPS}] Installing uv via pip...")
+    # Install via pip on Windows or if curl fails
+    print("\tInstalling uv via pip...")
     try:
-        subprocess.run(
-            ["pip", "install", "uv"],
+        run_cmd(
+            args=["pip", "install", "uv"],
             check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            shell=False,
         )
-        subprocess.run(
+        run_cmd(
             args=["uv", "--version"],
             check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            shell=False,
         )
+        print("\tSuccessfully installed uv via pip")
+        return True
     except subprocess.CalledProcessError:
         print("\tFailed to install uv via pip.")
-        raise
 
-    # *nix install
-    else:
-        print(f"[2/{NUM_STEPS}] *nix detected, installing uv via curl...")
-        subprocess.run(
-            ["curl ", "-LsSf", "https://astral.sh/uv/install.sh", "|", "sh"],
-            shell=True,
-        )
+    return False
 
 
-def update_uv() -> None:
+def update_uv(prefix: str | None) -> bool:
     """Update uv to the latest version."""
+    print(format_prefix(prefix) + "Updating uv...")
+
     # Early exit if uv is not installed
-    if not uv_is_installed():
-        return
+    if get_uv_version() is None:
+        return False
 
-    # Windows update
-    if user_is_running_windows():
-        subprocess.run(["pip", "install", "--upgrade", "uv"])
-
-    # macOS/Linux update
-    else:
-        subprocess.run(
-            ["uv", "self-update"],
-            shell=True,
+    # Update through uv
+    print("\tUpdating uv directly...")
+    try:
+        run_cmd(
+            args=["uv", "self-update"],
+            check=True,
         )
+        print("\tSuccessfully updated uv directly")
+        return True
+    except subprocess.CalledProcessError:
+        print("\tFailed to update uv directly")
+
+    # Update through pip
+    print("\tUpdating uv via pip...")
+    try:
+        run_cmd(
+            args=["pip", "install", "--upgrade", "uv"],
+            check=True,
+        )
+        print("\tSuccessfully updated uv via pip")
+        return True
+    except subprocess.CalledProcessError:
+        print("\tFailed to update uv via pip")
+
+    return False
 
 
-def setup_environment() -> None:
-    """Set up the environment by installing or updating uv."""
-    if not uv_is_installed():
-        install_uv()
-    update_uv()
+if __name__ == "__main__":
+    # Install uv
+    uv_installed = get_uv_version(prefix="1/4")
+    if not uv_installed:
+        install_uv(prefix="2/4")
+
+    # Update uv
+    update_uv(prefix="3/4")
+
+    # Verify installation
+    get_uv_version(prefix="4/4")
