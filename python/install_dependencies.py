@@ -4,7 +4,7 @@ from _common import must_pass, format_prefix, run_cmd
 from pathlib import Path
 
 
-def install_projects(
+def install_dependencies(
     projects: list[Path] = PROJECTS,
     dependency_groups: list[str] = [],
     prefix: str | None = None,
@@ -20,9 +20,7 @@ def install_projects(
                 cmd.extend(dependency_groups)
 
             # Run the command
-            output = run_cmd(cmd, check=False)
-            print(output.stderr.decode().strip())
-            print(output.stdout.decode().strip())
+            run_cmd(cmd=cmd, check=False)
             print(f"\tInstalled project '{path}'")
         except (subprocess.CalledProcessError, FileNotFoundError) as e:
             print(f"\tFailed to install project '{path}': {e}")
@@ -32,4 +30,4 @@ def install_projects(
 
 if __name__ == "__main__":
     # Install dependencies in the virtual environment
-    must_pass(install_projects(prefix="1/1"))
+    must_pass(install_dependencies(prefix="1/1"))
