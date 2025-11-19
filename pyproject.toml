@@ -11,17 +11,10 @@ requires-python = ">=3.10"
 dependencies = []
 
 [dependency-groups]
-dev = [
-    "black",
-    "ruff",
-    "mypy",
-    "pytest",
-    "pytest-cov",
-]
-docs = [
-    "sphinx",
-    "sphinx-rtd-theme",
-]
+test = ["pytest", "pytest-cov"]
+docs = ["sphinx", "sphinx-rtd-theme"]
+dev = ["black", "ruff", "mypy"]
+pipeline = ["flake8"]
 
 [project.urls]
 Homepage = "https://github.com/wh1ter0se/env.py"
@@ -52,28 +45,22 @@ extend-exclude = '''
 [tool.ruff]
 line-length = 88
 target-version = "py310"
-exclude = [
-    ".git",
-    ".venv",
-    "__pycache__",
-    "build",
-    "dist",
-]
+exclude = [".git", ".venv", "__pycache__", "build", "dist"]
 
 [tool.ruff.lint]
 select = [
-    "E",      # pycodestyle errors
-    "W",      # pycodestyle warnings
-    "F",      # pyflakes
-    "I",      # isort
-    "N",      # pep8-naming
-    "UP",     # pyupgrade
-    "B",      # flake8-bugbear
-    "C4",     # flake8-comprehensions
-    "RUF",    # ruff-specific rules
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "RUF", # ruff-specific rules
 ]
 ignore = [
-    "E501",   # line too long (handled by Black)
+    "E501", # line too long (handled by Black)
 ]
 
 [tool.ruff.lint.isort]
@@ -102,10 +89,7 @@ markers = [
 [tool.coverage.run]
 branch = true
 source = ["src"]
-omit = [
-    "*/tests/*",
-    "*/site-packages/*",
-]
+omit = ["*/tests/*", "*/site-packages/*"]
 
 [tool.coverage.report]
 exclude_lines = [
