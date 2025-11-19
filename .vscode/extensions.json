@@ -5,6 +5,7 @@
         "ms-python.vscode-pylance",
         "ms-python.mypy-type-checker",
         "ms-python.black-formatter",
-        "njqdev.vscode-python-typehint"
+        "njqdev.vscode-python-typehint",
+        "DavidAnson.vscode-markdownlint"
     ]
 }
