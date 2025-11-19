@@ -14,7 +14,7 @@ dependencies = []
 test = ["pytest", "pytest-cov"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 dev = ["black", "ruff", "mypy"]
-pipeline = ["flake8"]
+pipeline = ["flake8", "flake8-pyproject"]
 
 [project.urls]
 Homepage = "https://github.com/wh1ter0se/env.py"
@@ -82,3 +82,20 @@ exclude_lines = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/env_py"]
+
+[tool.flake8]
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "docs/source/conf.py",
+    "old",
+    "build",
+    "dist",
+    "scripts",
+    "*/__init__.py",
+    "*/__main__.py",
+]
+extend-ignore = "E203"
+max-complexity = 10
+line-length = 100
