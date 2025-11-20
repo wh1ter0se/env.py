@@ -36,4 +36,4 @@ jobs:
     - name: Test with pytest
       run: |
         ls
-        uv run pytest --rootdir=${{ github.workspace }} test
+        uv run python -m pytest --rootdir=${{ github.workspace }} test
