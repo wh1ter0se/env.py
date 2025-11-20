@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 dependencies = []
 
 [dependency-groups]
-test = ["pytest", "pytest-cov"]
+test = ["pytest", "pytest-cov", "pytest-selenium"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 dev = ["black", "ruff", "mypy"]
 pipeline = ["flake8", "flake8-pyproject"]
