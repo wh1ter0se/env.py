@@ -10,11 +10,31 @@ on:
     branches: ["main"]
 
 jobs:
+  version:
+    name: Semantic Version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (shallow)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Calculate Version
+        id: calculate-version
+        uses: bitshifted/git-auto-semver@v2
+        with:
+          initial_version: 0.1.0
+
+      - name: Echo Version
+        run: 'echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"'
+
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install uv
         run: python -m pip install uv
@@ -37,7 +57,8 @@ jobs:
       matrix:
         python-version: ["3.8", "3.10", "3.14"]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install uv
         run: python -m pip install uv
