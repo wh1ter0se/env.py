@@ -45,7 +45,7 @@ ignore = [
 ]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.0"
 warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
