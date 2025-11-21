@@ -7,7 +7,7 @@ name = "env-py"
 version = "0.1.0"
 description = "A brief description of your project"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.7"
 dependencies = []
 
 [dependency-groups]
@@ -15,12 +15,6 @@ test = ["pytest", "pytest-cov", "pytest-selenium"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 dev = ["black", "ruff", "mypy"]
 pipeline = ["flake8", "flake8-pyproject"]
-
-[project.urls]
-Homepage = "https://github.com/wh1ter0se/env.py"
-Documentation = "https://github.com/wh1ter0se/env.py#readme"
-Repository = "https://github.com/wh1ter0se/env.py.git"
-"Bug Tracker" = "https://github.com/wh1ter0se/env.py/issues"
 
 [tool.black]
 line-length = 88
@@ -45,7 +39,7 @@ ignore = [
 ]
 
 [tool.mypy]
-python_version = "3.0"
+python_version = "3.7"
 warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
