@@ -14,7 +14,7 @@ dependencies = []
 test = ["pytest", "pytest-cov", "pytest-selenium"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 dev = ["black", "ruff", "mypy"]
-pipeline = ["flake8", "flake8-pyproject"]
+lint = ["flake8", "flake8-pyproject"]
 
 [tool.black]
 line-length = 88
