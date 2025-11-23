@@ -45,7 +45,7 @@ jobs:
 
   batch_test:
     name: Batch Test
-    needs: build
+    needs: [lint, build]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -65,7 +65,7 @@ jobs:
         run: uv pip install . --group test
 
       - name: Test with pytest
-        run: uv run python -m pytest --rootdir=${{ github.workspace }} tes
+        run: uv run python -m pytest --rootdir=${{ github.workspace }} test
 
   version:
     name: Semantic Version
