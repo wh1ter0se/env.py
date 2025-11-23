@@ -1,4 +1,4 @@
-from src.utils import example
+from envpy.src.utils import example
 
 
 def test_example():

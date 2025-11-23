@@ -1,0 +1,6 @@
+config:
+  VENV_LOCATION: ".venv"
+  PYTHON_VERSION: "3.8"
+  PROJECTS: ["envpy"]
+  DEV_DEP_GROUPS: ["dev", "test"]
+  PIPELINE_DEP_GROUPS: ["pipeline", "test"]

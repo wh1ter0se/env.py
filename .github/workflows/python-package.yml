@@ -10,6 +10,13 @@ on:
     branches: ["main"]
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntuplaest
+    steps:
+      - name: Run linter (ruff)
+        run: uv run ruff thepackage
+
   version:
     name: Semantic Version
     runs-on: ubuntu-latest

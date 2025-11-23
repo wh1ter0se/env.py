@@ -1,14 +1,26 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
-name = "env-py"
-version = "0.1.0"
+name = "envpy"
+dynamic = ["version"]
 description = "A brief description of your project"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/env_py"]
+
+[tool.hatch.build.hooks.version]
+path = "src/example/_version.py"
+template = '''
+version = "{version}"
+'''
 
 [dependency-groups]
 test = ["pytest", "pytest-cov", "pytest-selenium"]
@@ -52,10 +64,6 @@ exclude = ["venv", ".venv", "build", "dist"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--cov=src --cov-report=term-missing --strict-markers"
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "integration: marks tests as integration tests",
-]
 
 [tool.coverage.run]
 branch = true
@@ -73,9 +81,6 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/env_py"]
 
 [tool.flake8]
 exclude = [

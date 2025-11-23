@@ -3,8 +3,9 @@
     "editor.formatOnSave": true,
     "files.exclude": {
         "**/*.pyc": true,
-        "**/__pycache__/**": true,
-        "**/.mypy_cache/**": true
+        "**/__pycache__": true,
+        "**/.mypy_cache": true,
+        "**/.pytest_cache": true
     },
     "editor.rulers": [
         {
@@ -21,14 +22,14 @@
         },
     ],
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
     },
     "python.analysis.stubPath": "stubs",
     "mypy-type-checker.severity": {
         "error": "Warning"
-    },
-    "[markdown]": {
-        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
     "python.testing.pytestArgs": [
         "test"
@@ -38,5 +39,8 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.ruff": "explicit",
         "source.organizeImports.ruff": "explicit"
-    }
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    },
 }

@@ -1,4 +1,4 @@
-from .core import run_example
+from .src.core import run_example
 
 
 def run_example_wrapper(retval: bool) -> bool:
