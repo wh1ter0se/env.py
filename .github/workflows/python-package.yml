@@ -21,7 +21,7 @@ jobs:
         run: python -m pip install uv
 
       - name: Run linter (ruff)
-        run: uv run ruff thepackage
+        run: uv run ruff check
 
   build:
     name: Build
