@@ -1,4 +1,4 @@
-from envpy.src.core import run_example
+from envpy import run_example
 
 
 def test_run_example():
