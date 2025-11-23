@@ -17,27 +17,9 @@ jobs:
       - name: Run linter (ruff)
         run: uv run ruff thepackage
 
-  version:
-    name: Semantic Version
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout (shallow)
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-
-      - name: Calculate Version
-        id: calculate-version
-        uses: bitshifted/git-auto-semver@v2
-        with:
-          initial_version: 0.1.0
-
-      - name: Echo Version
-        run: 'echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"'
-
   build:
     name: Build
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -77,4 +59,24 @@ jobs:
         run: uv pip install . --group test
 
       - name: Test with pytest
-        run: uv run python -m pytest --rootdir=${{ github.workspace }} test
+        run: uv run python -m pytest --rootdir=${{ github.workspace }} tes
+
+  version:
+    name: Semantic Version
+    needs: batch_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (shallow)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Calculate Version
+        id: calculate-version
+        uses: bitshifted/git-auto-semver@v2
+        with:
+          initial_version: 0.1.0
+
+      - name: Echo Version
+        run: 'echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"'
