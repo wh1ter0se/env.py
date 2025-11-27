@@ -34,7 +34,7 @@
         "editor.defaultFormatter": "tamasfe.even-better-toml"
     },
     "[markdown]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
