@@ -72,6 +72,7 @@ jobs:
         id: calculate-version
         uses: bitshifted/git-auto-semver@v2
         with:
+          create_tag: true
           initial_version: 0.1.0
 
       - name: Echo Version
