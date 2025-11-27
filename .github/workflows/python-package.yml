@@ -74,6 +74,9 @@ jobs:
       - name: Echo Version
         run: 'echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"'
 
+      - name: Update Version File
+        run: echo "version=${{ steps.calculate-version.outputs.version-string }}" > envpy/_version.py
+
   build:
     name: Build Package
     needs: [batch_test, version]
