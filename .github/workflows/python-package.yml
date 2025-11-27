@@ -111,7 +111,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update Version File
-        run: echo "version=${{ needs.version.outputs.version-string }}" > envpy/_version.py
+        run: echo "version = \"${{ needs.version.outputs.version-string }}\"" > envpy/_version.py
 
       - name: Configure user
         run: |
