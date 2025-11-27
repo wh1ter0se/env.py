@@ -10,8 +10,8 @@ on:
     branches: ["main"]
 
 jobs:
-  lint:
-    name: Lint
+  lint_source:
+    name: Lint Source Code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,9 +23,16 @@ jobs:
       - name: Run linter (ruff)
         run: uv run ruff check
 
+  lint_commit:
+    name: Lint Commit Message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Conventional Commitlint
+        uses: opensource-nepal/commitlint@v1
+
   batch_test:
     name: Batch Test
-    needs: lint
+    needs: [lint_source, lint_commit]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -47,6 +54,26 @@ jobs:
       - name: Test with pytest
         run: uv run python -m pytest --rootdir=${{ github.workspace }} test
 
+  version:
+    name: Semantic Version
+    needs: lint_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (shallow)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Calculate Version
+        id: calculate-version
+        uses: bitshifted/git-auto-semver@v2
+        with:
+          initial_version: 0.1.0
+
+      - name: Echo Version
+        run: 'echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"'
+
   build:
     name: Build Package
     needs: [batch_test, version]
@@ -66,23 +93,3 @@ jobs:
 
       - name: Build (uv)
         run: uv build
-
-  version:
-    name: Semantic Version
-    needs: batch_test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout (shallow)
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-
-      - name: Calculate Version
-        id: calculate-version
-        uses: bitshifted/git-auto-semver@v2
-        with:
-          initial_version: 0.1.0
-
-      - name: Echo Version
-        run: 'echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"'
