@@ -103,6 +103,9 @@ jobs:
     needs: [batch_test, version]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Configure user
         run: |
           git config --global user.name "${{ github.actor }}"
