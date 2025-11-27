@@ -123,7 +123,7 @@ jobs:
 
       - name: Commit
         run: |
-          git commit -m 'chore: update version file'
+          git commit -m 'chore: update version file (${{ needs.version.outputs.version-string }})'
 
       - name: Push
         run: git push
