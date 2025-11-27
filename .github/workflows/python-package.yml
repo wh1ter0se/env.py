@@ -59,6 +59,8 @@ jobs:
     name: Semantic Version
     needs: lint_commit
     runs-on: ubuntu-latest
+    outputs:
+      version-string: ${{ steps.upload-version.outputs.version-string }}
     steps:
       - name: Checkout (shallow)
         uses: actions/checkout@v3
@@ -75,8 +77,9 @@ jobs:
       - name: Echo Version
         run: 'echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"'
 
-      - name: Update Version File
-        run: echo "version=${{ steps.calculate-version.outputs.version-string }}" > envpy/_version.py
+      - name: Upload Version String
+        id: upload-version
+        run: echo "version-string=${{ steps.calculate-version.outputs.version-string }}" >> "$GITHUB_OUTPUT"
 
   build:
     name: Build Package
@@ -105,6 +108,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Update Version File
+        run: echo "version=${{ needs.version.outputs.version-string }}" > envpy/_version.py
 
       - name: Configure user
         run: |
