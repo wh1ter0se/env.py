@@ -44,4 +44,10 @@
     "[markdown]": {
         "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
+    "conventionalCommits.scopes": [
+        "github",
+        "vscode",
+        "scripts",
+        "template",
+    ],
 }
