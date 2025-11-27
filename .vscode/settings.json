@@ -6,7 +6,7 @@
         "**/__pycache__": true,
         "**/.mypy_cache": true,
         "**/.pytest_cache": true,
-        "**/.ruff_cache": true,
+        "**/.ruff_cache": true
     },
     "editor.rulers": [
         {
@@ -20,14 +20,25 @@
         {
             "column": 100,
             "color": "#373737"
-        },
+        }
     ],
     "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff"
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+        }
     },
     "[toml]": {
         "editor.defaultFormatter": "tamasfe.even-better-toml"
     },
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "prettier.endOfLine": "crlf",
     "python.analysis.stubPath": "stubs",
     "mypy-type-checker.severity": {
         "error": "Warning"
@@ -37,17 +48,10 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.ruff": "explicit",
-        "source.organizeImports.ruff": "explicit"
-    },
-    "[markdown]": {
-        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-    },
     "conventionalCommits.scopes": [
         "github",
         "vscode",
         "scripts",
-        "template",
+        "template"
     ],
 }
