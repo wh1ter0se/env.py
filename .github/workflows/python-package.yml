@@ -97,3 +97,23 @@ jobs:
 
       - name: Build (uv)
         run: uv build
+
+  commit_version:
+    name: Commit Version FIle
+    needs: [batch_test, version]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure user
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Stage Changes
+        run: git add .
+
+      - name: Commit
+        run: |
+          git commit -m 'chore: update version file'
+
+      - name: Push
+        run: git push
