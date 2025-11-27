@@ -10,9 +10,11 @@ Settings for a Python development environment in VS code are stored in the `.vsc
 
 - `extensions.json`: Recommended extensions
 - `settings.json` General environment settings
-- `tasks.json`: References to `scipts/` in a format VS Code can parse
+- `tasks.json`: References to `scripts/` in a format VS Code can parse
 
 ### Python
+
+- `pyproject.toml` defines the dependencies and other build information for the python module in `src/`
 
 #### Packaging (`uv`)
 
