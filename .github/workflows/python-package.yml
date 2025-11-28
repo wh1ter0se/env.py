@@ -43,14 +43,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
+      # - name: Install uv
+      #   uses: astral-sh/setup-uv@v7
 
-      - name: Setup venv
-        run: uv venv --python ${{ matrix.python-version }}
+      # - name: Setup venv
+      #   run: uv venv --python ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: uv pip install . --group test
+      # - name: Install dependencies
+      #   run: uv pip install . --group test
+
+      - name: Setup environment
+        run: python scripts/setup_pipeline_environment.py
 
       - name: Test with pytest
         run: uv run python -m pytest --rootdir=${{ github.workspace }} test
