@@ -1,17 +1,15 @@
 {
-  "config": {
-    "VENV_LOCATION": ".venv",
-    "PYTHON_VERSION": "3.14",
-    "PROJECTS": [
-      "envpy"
-    ],
-    "DEV_DEP_GROUPS": [
-      "dev",
-      "test"
-    ],
-    "PIPELINE_DEP_GROUPS": [
-      "pipeline",
-      "test"
-    ]
-  }
+  "VENV_LOCATION": ".venv",
+  "PYTHON_VERSION": "3.14",
+  "PROJECTS": [
+    "envpy"
+  ],
+  "DEV_DEP_GROUPS": [
+    "dev",
+    "test"
+  ],
+  "PIPELINE_DEP_GROUPS": [
+    "pipeline",
+    "test"
+  ]
 }
