@@ -85,6 +85,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: true
           
       - name: Setup environment
         run: python scripts/setup_pipeline_environment.py
