@@ -9,7 +9,7 @@
     "test"
   ],
   "PIPELINE_DEP_GROUPS": [
-    "pipeline",
+    "lint",
     "test"
   ]
 }

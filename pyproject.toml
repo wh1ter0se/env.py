@@ -25,8 +25,8 @@ version = "{version}"
 [dependency-groups]
 test = ["pytest", "pytest-cov", "pytest-selenium"]
 docs = ["sphinx", "sphinx-rtd-theme"]
+lint = ["ruff"]
 dev = ["black", "ruff", "mypy"]
-lint = ["flake8", "flake8-pyproject"]
 
 [tool.black]
 line-length = 88
